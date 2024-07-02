@@ -1,0 +1,65 @@
+
+body {
+    background-color: #f3f4f6; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    color: #333; 
+}
+
+.container {
+    padding-top: 3rem;
+    max-width: 90%; /* Slightly narrower container for better focus */
+}
+
+h1 {
+    color: #090909; /* Slightly darker blue for better readability */
+    margin-bottom: 3rem;
+    text-align: center; /* Center the heading */
+    font-size: 2.5rem; /* Larger heading */
+    font-weight: 600; /* Thicker font weight */
+}
+
+table {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+th {
+    background-color: #5c5e60; /* Slightly darker blue for contrast */
+    color: #ffffff;
+}
+
+th, td {
+    padding: 1rem; /* More padding for spacious look */
+    border: 1px solid #090909; /* Lighter border for softer look */
+    text-align: left; /* Align text to left for readability */
+}
+
+tr:hover {
+    background-color: #e9ecef; /* Hover effect for rows */
+}
+
+.endpoint-header {
+    background-color: #4c5749; /* Darker shade for section headers */
+    color: #ffffff;
+    font-size: 1.25rem; /* Bigger font size for headers */
+    padding: 1rem; /* More padding for headers */
+    text-align: center; /* Center text in header */
+}
+
+/* Add a smooth transition effect to the whole page */
+*:not(script) {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Make the table more readable on smaller screens */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+}

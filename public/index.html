@@ -1,0 +1,79 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css
+    ">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4 ps-5 ms-5">
+            <u>
+                Static Page
+            </u>
+        </h1>
+        <table class="table table-striped mt-4">
+            <thead>
+                <th colspan="2">Routes</th>
+                <th colspan="2">HTTP methods</th>
+                <th colspan="2">Description</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2">/</td>
+                    <td colspan="2">GET</td>
+                    <td colspan="2">Render Home Page index.html </td>
+                </tr>
+                <th colspan="4">
+                    Users Endpoint
+                </th>
+                <tr>
+                    <td colspan="2">/users</td>
+                    <td colspan="2">GET</td>
+                    <td colspan="2">Retrieving all/multiple users</td>
+                </tr>
+                <!-- <tr>
+                    <td colspan="2">/users/:id</td>
+                    <td colspan="2">GET</td>
+                    <td colspan="2">Retrieving a single user</td>
+                </tr> -->
+                <tr>
+                    <td colspan="2">/register</td>
+                    <td colspan="2">POST</td>
+                    <td colspan="2">Adding users .</td>
+                </tr>
+                <tr>
+                    <td colspan="2">/login</td>
+                    <td colspan="2">POST</td>
+                    <td colspan="2">Allowing user to login .</td>
+                </tr>
+                <tr>
+                    <td colspan="2">/users/:id</td>
+                    <td colspan="2">PATCH</td>
+                    <td colspan="2">Updating a single user</td>
+                </tr>
+                <tr>
+                    <td colspan="2">/users/:id</td>
+                    <td colspan="2">DELETE</td>
+                    <td colspan="2">Deleting a single user</td>
+                </tr>
+                <th colspan="4">
+                    payload Endpoints
+                </th>
+                <tr>
+                    <td colspan="2">/payload</td>
+                    <td colspan="2">GET</td>
+                    <td colspan="2">Retrieving multiple/all payload</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
+        "></script>
+</body>
+</html>
