@@ -29,7 +29,6 @@ async function getUserData() {
   await: Tells the function to wait until the file is read completely.
   readFile: Reads the contents of the file.
   new URL('./users.json', import.meta.url): Specifies the location of the users.json file relative to where the current script is running.
-
   */
   return JSON.parse(jsonData.toString());
      /*
@@ -74,86 +73,138 @@ function generateToken(userId) {
  * by limiting its validity period.
 */
 
+// Define a route handler for GET requests to '/users'
 app.get('/users', async (req, res) => {
   try {
+    // Attempt to retrieve user data asynchronously
     const userData = await getUserData();
+    // Send the retrieved user data as a JSON response
     res.json(userData);
   } catch (error) {
+    // Log any errors to the console
     console.error(error);
+    // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error fetching users', error: error.message });
   }
 });
+
+
+// Define a route handler for GET requests to '/payload'
 app.get('/payload', async (req, res) => {
   try {
+      // Attempt to retrieve user data asynchronously
     const payloadData = await getPayload();
+    // Send the retrieved payload data as a JSON response
     res.json(payloadData);
   } catch (error) {
+     // Log any errors to the console
     console.error(error);
+     // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error fetching payload', error: error.message });
   }
 });
 
 
+// Define a route handler for POST requests to '/register'
 app.post('/register', async (req, res) => {
   try {
+    // Hash the password provided in the request body
     const hashedPassword = hashPassword(req.body.password);
-    const userData = await getUserData(); // Assuming getUserData reads from a JSON file
-    const newUser = {...req.body, password: hashedPassword };
-    userData.push(newUser); // Simplified storage logic
+
+    // Retrieve existing user data asynchronously
+    const userData = await getUserData();
+
+    // Create a new user object, including the hashed password
+    const newUser = { ...req.body, password: hashedPassword };
+
+    // Add the new user to the existing user data
+    userData.push(newUser);
+
+    // Write the updated user data back to the users.json file
     await writeFile(new URL('./users.json', import.meta.url), JSON.stringify(userData));
 
+    // Generate a token for the new user
     const token = generateToken(newUser.id);
+
+    // Send a response with a status of 201 (Created), including a success message and the token
     res.status(201).send({ message: 'User registered successfully', token });
   } catch (error) {
+    // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error registering user', error: error.message });
   }
 });
 
+
+// Define a route handler for POST requests to '/login'
 app.post('/login', async (req, res) => {
   try {
+    // Retrieve user data asynchronously
     const userData = await getUserData();
+    // Find a user with the matching email in the request body
     const user = userData.find(u => u.email === req.body.email);
 
+    // If user not found, send a 404 status code with an error message
     if (!user) {
       return res.status(404).send({ message: 'User not found' });
     }
 
+    // Compare the provided password with the stored hashed password
     const validPassword = bcrypt.compareSync(req.body.password, user.password);
+    // If the password is invalid, send a 401 status code with an error message
     if (!validPassword) {
       return res.status(401).send({ message: 'Invalid credentials' });
     }
 
+    // Generate a JSON Web Token (JWT) for the authenticated user
     const token = generateToken(user.id);
+    // Set the token as a cookie in the response
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: false,
-      maxAge: 3600000,
-      sameSite: 'lax',
+      httpOnly: true,    // Make the cookie inaccessible to JavaScript on the client-side
+      secure: false,     // Set to true if using HTTPS
+      maxAge: 3600000,   // Set cookie expiration time (1 hour in milliseconds)
+      sameSite: 'lax',   // Control when cookies are sent with cross-site requests
     });
+    // Send a 200 status code with a success message and the token
     res.status(200).send({ message: 'Login successful', token });
   } catch (error) {
+    // Log any errors to the console
     console.error(error);
+    // Send a 500 status code with an error message if something goes wrong
     res.status(500).send({ message: 'Error logging in', error: error.message });
   }
 });
 
+
+// Define a route handler for DELETE requests to '/users/:id'
 app.delete('/users/:id', async (req, res) => {
   try {
+    // Retrieve current user data asynchronously
     const userData = await getUserData();
-    const userIdToDelete = parseInt(req.params.id, 10); // Convert ID to integer
-    const updatedUserData = userData.filter(user => user.id!== userIdToDelete);
 
+    // Get the user ID from the request parameters and convert it to an integer
+    const userIdToDelete = parseInt(req.params.id, 10);
+
+    // Filter out the user with the specified ID
+    const updatedUserData = userData.filter(user => user.id !== userIdToDelete);
+
+    // Check if the user was found and deleted
     if (updatedUserData.length < userData.length) {
+      // Write the updated user data back to the file
       await writeFile(new URL('./users.json', import.meta.url), JSON.stringify(updatedUserData));
+      // Send a success response
       res.status(200).send({ message: 'User deleted successfully' });
     } else {
+      // Send a response indicating the user was not found
       res.status(404).send({ message: 'User not found' });
     }
   } catch (error) {
+    // Log any errors to the console
     console.error(error);
+    // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error deleting user', error: error.message });
   }
 });
+
 
 app.patch('/users/:id', async (req, res) => {
   try {
