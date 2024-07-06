@@ -75,7 +75,10 @@ function generateToken(userId) {
  * between parties. The token expires after 1 hour ('1h'), enhancing security
  * by limiting its validity period.
 */
-
+async function getUserDataById(id) {
+  const userData = await getUserData();
+  return userData.find(user => user.id === parseInt(id));
+}
 // Define a route handler for GET requests to '/users'
 app.get('/users', async (req, res) => {
   try {
@@ -88,6 +91,20 @@ app.get('/users', async (req, res) => {
     console.error(error);
     // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error fetching users', error: error.message });
+  }
+});
+
+app.get('/users/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userData = await getUserDataById(userId);
+    if (!userData) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+    res.json(userData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching user', error: error.message });
   }
 });
 
@@ -160,8 +177,14 @@ app.post('/login', async (req, res) => {
 
     // Generate a JSON Web Token (JWT) for the authenticated user
     const token = generateToken(user.id);
-    // Set the token as a cookie in the response
+    // Set the token and user ID as cookies in the response
     res.cookie('token', token, {
+      httpOnly: true,    // Make the cookie inaccessible to JavaScript on the client-side
+      secure: false,     // Set to true if using HTTPS
+      maxAge: 3600000,   // Set cookie expiration time (1 hour in milliseconds)
+      sameSite: 'lax',   // Control when cookies are sent with cross-site requests
+    });
+    res.cookie('userId', user.id, {
       httpOnly: true,    // Make the cookie inaccessible to JavaScript on the client-side
       secure: false,     // Set to true if using HTTPS
       maxAge: 3600000,   // Set cookie expiration time (1 hour in milliseconds)
@@ -176,6 +199,7 @@ app.post('/login', async (req, res) => {
     res.status(500).send({ message: 'Error logging in', error: error.message });
   }
 });
+
 
 
 // Define a route handler for DELETE requests to '/users/:id'
