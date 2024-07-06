@@ -191,7 +191,7 @@ app.post('/login', async (req, res) => {
       sameSite: 'lax',   // Control when cookies are sent with cross-site requests
     });
     // Send a 200 status code with a success message and the token
-    res.status(200).send({ message: 'Login successful', token });
+    res.status(200).send({ message: 'Login successful', token,user });
   } catch (error) {
     // Log any errors to the console
     console.error(error);
