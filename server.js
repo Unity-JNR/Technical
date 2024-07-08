@@ -22,12 +22,7 @@ app.use(express.static('public'));
 
 
 app.use(cookieParser());
-app.use(cors(
-  {
-    origin: 'http://localhost:8080',
-    credentials: true,
-  }
-))
+app.use(cors())
 
 
 async function getUserData() {
@@ -49,12 +44,12 @@ getUserData().then(user => console.log(user));
   /*  getUserData(): Calls the getUserData function.
     .then(user => console.log(user)): Waits for the function to finish, then prints the result (user) to the console. */
 
-// async function getPayload(){
-//   const jsonData = await readFile(new URL('./payload.json', import.meta.url));
-//   return JSON.parse(jsonData.toString());
-// }
+async function getPayload(){
+  const jsonData = await readFile(new URL('./payload.JSON', import.meta.url));
+  return JSON.parse(jsonData.toString());
+}
 
-// getPayload().then(payload => console.log(payload));
+getPayload().then(payload => console.log(payload));
 
 function hashPassword(password) {
   return bcrypt.hashSync(password, 10);
@@ -80,10 +75,7 @@ function generateToken(userId) {
  * between parties. The token expires after 1 hour ('1h'), enhancing security
  * by limiting its validity period.
 */
-async function getUserDataById(id) {
-  const userData = await getUserData();
-  return userData.find(user => user.id === parseInt(id));
-}
+
 // Define a route handler for GET requests to '/users'
 app.get('/users', async (req, res) => {
   try {
@@ -101,33 +93,40 @@ app.get('/users', async (req, res) => {
 
 app.get('/users/:id', async (req, res) => {
   try {
-    const userId = req.params.id;
-    const userData = await getUserDataById(userId);
-    if (!userData) {
-      return res.status(404).send({ message: 'User not found' });
+    // Retrieve existing user data asynchronously
+    const userData = await getUserData();
+    // Find the user with the provided ID in the user data
+    const user = userData.find(u => u.id === parseInt(req.params.id));
+    // If the user is found, send it as a JSON response
+    if (user) {
+      res.json(user);
+    } else {
+      // If the user is not found, send a 404 status code with an error message
+      res.status(404).send({ message: 'User not found' });
     }
-    res.json(userData);
   } catch (error) {
+    // Log any errors to the console
     console.error(error);
+    // Send a 500 status code and error message if something goes wrong
     res.status(500).send({ message: 'Error fetching user', error: error.message });
-  }
-});
+  
+}});
 
 
 // Define a route handler for GET requests to '/payload'
-// app.get('/payload', async (req, res) => {
-//   try {
-//       // Attempt to retrieve user data asynchronously
-//     const payloadData = await getPayload();
-//     // Send the retrieved payload data as a JSON response
-//     res.json(payloadData);
-//   } catch (error) {
-//      // Log any errors to the console
-//     console.error(error);
-//      // Send a 500 status code and error message if something goes wrong
-//     res.status(500).send({ message: 'Error fetching payload', error: error.message });
-//   }
-// });
+app.get('/payload', async (req, res) => {
+  try {
+      // Attempt to retrieve user data asynchronously
+    const payloadData = await getPayload();
+    // Send the retrieved payload data as a JSON response
+    res.json(payloadData);
+  } catch (error) {
+     // Log any errors to the console
+    console.error(error);
+     // Send a 500 status code and error message if something goes wrong
+    res.status(500).send({ message: 'Error fetching payload', error: error.message });
+  }
+});
 
 
 // Define a route handler for POST requests to '/register'
@@ -196,7 +195,7 @@ app.post('/login', async (req, res) => {
       sameSite: 'lax',   // Control when cookies are sent with cross-site requests
     });
     // Send a 200 status code with a success message and the token
-    res.status(200).send({ message: 'Login successful', token,user });
+    res.status(200).send({ message: 'Login successful', token ,user});
   } catch (error) {
     // Log any errors to the console
     console.error(error);
