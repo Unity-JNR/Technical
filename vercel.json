@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "server.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+      { "src": "/users.json", "dest": "/users.json" },
+      { "src": "/payload.json", "dest": "/payload.json" },
+      { "src": "/(.*)", "dest": "/server.js" }
+    ]
+  }
