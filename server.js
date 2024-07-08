@@ -49,12 +49,12 @@ getUserData().then(user => console.log(user));
   /*  getUserData(): Calls the getUserData function.
     .then(user => console.log(user)): Waits for the function to finish, then prints the result (user) to the console. */
 
-async function getPayload(){
-  const jsonData = await readFile(new URL('./payload.json', import.meta.url));
-  return JSON.parse(jsonData.toString());
-}
+// async function getPayload(){
+//   const jsonData = await readFile(new URL('./payload.json', import.meta.url));
+//   return JSON.parse(jsonData.toString());
+// }
 
-getPayload().then(payload => console.log(payload));
+// getPayload().then(payload => console.log(payload));
 
 function hashPassword(password) {
   return bcrypt.hashSync(password, 10);
@@ -115,19 +115,19 @@ app.get('/users/:id', async (req, res) => {
 
 
 // Define a route handler for GET requests to '/payload'
-app.get('/payload', async (req, res) => {
-  try {
-      // Attempt to retrieve user data asynchronously
-    const payloadData = await getPayload();
-    // Send the retrieved payload data as a JSON response
-    res.json(payloadData);
-  } catch (error) {
-     // Log any errors to the console
-    console.error(error);
-     // Send a 500 status code and error message if something goes wrong
-    res.status(500).send({ message: 'Error fetching payload', error: error.message });
-  }
-});
+// app.get('/payload', async (req, res) => {
+//   try {
+//       // Attempt to retrieve user data asynchronously
+//     const payloadData = await getPayload();
+//     // Send the retrieved payload data as a JSON response
+//     res.json(payloadData);
+//   } catch (error) {
+//      // Log any errors to the console
+//     console.error(error);
+//      // Send a 500 status code and error message if something goes wrong
+//     res.status(500).send({ message: 'Error fetching payload', error: error.message });
+//   }
+// });
 
 
 // Define a route handler for POST requests to '/register'
