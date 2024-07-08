@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://smart-view-one.vercel.app/', // Your frontend URL
+  origin: 'https://smart-view-760ef.web.app/', // Your frontend URL
   credentials: true,
 }));
 
