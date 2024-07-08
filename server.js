@@ -34,7 +34,7 @@ async function getUserData() {
 
 // Function to read payload data from JSON file
 async function getPayload() {
-  const jsonData = await readFile(new URL('./payload.json', import.meta.url));
+  const jsonData = await readFile(new URL('./payload.JSON', import.meta.url));
   return JSON.parse(jsonData.toString());
 }
 
