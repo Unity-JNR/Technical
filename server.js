@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:8080', // Your frontend URL
+  origin: 'https://smart-view-one.vercel.app/', // Your frontend URL
   credentials: true,
 }));
 
