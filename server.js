@@ -22,9 +22,10 @@ app.use(express.static('public'));
 
 
 app.use(cookieParser());
-app.use(cors({origin: 'http://localhost:8080/',
+app.use(cors({
+  origin: 'http://localhost:8080', // Your frontend URL
   credentials: true,
-}))
+}));
 
 
 async function getUserData() {
